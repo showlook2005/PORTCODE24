@@ -1,0 +1,57 @@
+[package]
+name = "cron-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = "0.4"
+chrono-tz = "0.9"
+iana-time-zone = "0.1"
+tokio = { version = "1", features = ["full"] }
+thiserror = "1"
+tracing = "0.1"
+
+[dev-dependencies]
+criterion = "0.5"
+proptest = "1"
+
+[[test]]
+name = "spec_test"
+path = "tests/ported/spec_test.rs"
+
+[[test]]
+name = "parser_test"
+path = "tests/ported/parser_test.rs"
+
+[[test]]
+name = "constantdelay_test"
+path = "tests/ported/constantdelay_test.rs"
+
+[[test]]
+name = "chain_test"
+path = "tests/ported/chain_test.rs"
+
+[[test]]
+name = "cron_test"
+path = "tests/ported/cron_test.rs"
+
+[[test]]
+name = "option_test"
+path = "tests/ported/option_test.rs"
+
+[[test]]
+name = "differential"
+path = "tests/differential.rs"
+
+[[test]]
+name = "soak"
+path = "tests/soak.rs"
+
+[[bin]]
+name = "cron-cli"
+path = "src/bin/cron_cli.rs"
+
+[[bench]]
+name = "compare_bench"
+harness = false
+path = "benches/compare_bench.rs"
