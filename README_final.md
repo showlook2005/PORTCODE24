@@ -59,11 +59,11 @@
 ```
 
 ### Core Components
-1. **[`src/spec.rs`](../src/spec.rs)**: Implements `SpecSchedule` which calculates the `next(DateTime<Tz>)` activation using fast bitfield math (64-bit bitmasks representing valid seconds, minutes, hours, days, months, and weekdays).
-2. **[`src/parser.rs`](../src/parser.rs)**: Parses string expressions like `"0 30 15 2 8 *"` or `"@every 1m"` into executable `Schedule` objects.
-3. **[`src/cron.rs`](../src/cron.rs)**: Manages job registration (`add_func`, `add_job`, `remove`), thread-safe state synchronization via `Arc<Mutex<...>>`, and Tokio event loop lifecycle (`start`, `stop`).
-4. **[`src/chain.rs`](../src/chain.rs)**: Decorator pattern for job execution wrappers (Panic Recovery, Concurrency controls).
-5. **[`src/bin/cron_cli.rs`](../src/bin/cron_cli.rs)**: Interactive command-line interface for testing, scheduling, and listing jobs live in the terminal.
+1. **[`src/spec.rs`](src/spec.rs)**: Implements `SpecSchedule` which calculates the `next(DateTime<Tz>)` activation using fast bitfield math (64-bit bitmasks representing valid seconds, minutes, hours, days, months, and weekdays).
+2. **[`src/parser.rs`](src/parser.rs)**: Parses string expressions like `"0 30 15 2 8 *"` or `"@every 1m"` into executable `Schedule` objects.
+3. **[`src/cron.rs`](src/cron.rs)**: Manages job registration (`add_func`, `add_job`, `remove`), thread-safe state synchronization via `Arc<Mutex<...>>`, and Tokio event loop lifecycle (`start`, `stop`).
+4. **[`src/chain.rs`](src/chain.rs)**: Decorator pattern for job execution wrappers (Panic Recovery, Concurrency controls).
+5. **[`src/bin/cron_cli.rs`](src/bin/cron_cli.rs)**: Interactive command-line interface for testing, scheduling, and listing jobs live in the terminal.
 
 ---
 
@@ -207,20 +207,20 @@ All 5 core success criteria established in `AGENTS.md` have been fully verified:
 
 1. **100% Test Parity**:
    - 185/185 Go test cases ported 1:1 into `tests/ported/` (`spec_test.rs`, `parser_test.rs`, `constantdelay_test.rs`, `chain_test.rs`, `cron_test.rs`).
-   - Detailed report: [test_parity.md](test_parity.md)
+   - Detailed report: [reports/test_parity.md](reports/test_parity.md)
 
 2. **Differential Parity Harness**:
    - 18,000 test points evaluated across 18 expression patterns and 1,000 seed timestamps.
    - **0 mismatches** between Go `robfig/cron` and Rust `cron-rs`.
-   - Detailed report: [differential_results.md](differential_results.md)
+   - Detailed report: [reports/differential_results.md](reports/differential_results.md)
 
 3. **Performance Latency**:
    - Measured ~68 ns p99 latency in Rust vs ~240 ns in Go (**~3.5x speedup**).
-   - Detailed report: [benchmark_results.md](benchmark_results.md)
+   - Detailed report: [reports/benchmark_results.md](reports/benchmark_results.md)
 
 4. **Memory Footprint**:
    - ~0.3 MB per 1,000 entries in Rust vs ~1.4 MB in Go (**~4.6x lower memory footprint**).
-   - Detailed report: [memory_report.md](memory_report.md)
+   - Detailed report: [reports/memory_report.md](reports/memory_report.md)
 
 5. **Concurrency & Panic Safety**:
    - Verified via `tests/soak.rs` under 20 concurrent worker tasks and panicking job recovery.
