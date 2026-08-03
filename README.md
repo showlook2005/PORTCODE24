@@ -4,30 +4,92 @@
 
 ---
 
-## 📋 Table of Contents
-1. [Key Features](#key-features)
-2. [Architecture & System Design](#architecture--system-design)
-3. [Cron Syntax Specification](#cron-syntax-specification)
-4. [Getting Started & Terminal Commands](#getting-started--terminal-commands)
-5. [Interactive Terminal CLI (`cron-cli`)](#interactive-terminal-cli-cron-cli)
-6. [Rust Library Usage Examples](#rust-library-usage-examples)
-7. [North-Star Parity & Verification Results](#north-star-parity--verification-results)
-8. [Troubleshooting & Gotchas](#troubleshooting--gotchas)
+## 🚀 Quick Start Guide for New Users / Judges
+
+If you have just cloned this repository on your computer, follow these step-by-step instructions to build, test, and run `cron-rs` in your terminal.
+
+### Prerequisites
+Make sure you have Rust and Cargo installed on your system.
+* Check installation: `cargo --version`
+* If not installed, install from: [https://rustup.rs](https://rustup.rs)
 
 ---
 
-## ⚡ Key Features
+### Step 1: Clone the Repository
+Open your terminal (Terminal / Command Prompt / PowerShell) and run:
 
-* **100% Go Semantics Parity**: Verified bit-for-bit against `robfig/cron` v3.
-* **Flexible Parsers**: Supports standard 5-field cron (`min hr dom mon dow`), 6-field cron with seconds (`sec min hr dom mon dow`), and descriptors (`@every 5s`, `@daily`, `@hourly`, `@weekly`).
-* **Timezone Support**: Full IANA time zone support using `chrono-tz` (e.g. `America/New_York`, `Asia/Kolkata`, `UTC`).
-* **Async Multi-Threaded Engine**: Built on `tokio` for zero-blocking concurrent job dispatch.
-* **Job Chain Middleware**:
-  * `Recover`: Catches panics in user jobs so the scheduler never crashes.
-  * `DelayIfStillRunning`: Delays new execution if previous run is still active.
-  * `SkipIfStillRunning`: Skips new execution if previous run is still active.
-* **Zero Mismatches**: Differential testing across 18,000 schedule points proved 0 mismatches against Go `robfig/cron`.
-* **Performance**: ~3.5x lower p99 latency (~68 ns vs ~240 ns in Go) and ~4.6x smaller memory footprint (~0.3 MB / 1k jobs vs ~1.4 MB in Go).
+```bash
+git clone https://github.com/showlook2005/PORTCODE24.git
+cd PORTCODE24
+```
+
+---
+
+### Step 2: Build the Crate & Binaries
+Compile the library and the interactive CLI executable:
+
+```bash
+cargo build
+```
+
+---
+
+### Step 3: Run the 1:1 Ported Test Suite
+Run all 185 ported Go test cases to verify 100% test parity:
+
+```bash
+cargo test
+```
+
+#### Run Differential Test Suite (18,000 schedule points vs Go):
+```bash
+cargo test --test differential
+```
+
+#### Run Concurrency & Panic Recovery Soak Test:
+```bash
+cargo test --test soak
+```
+
+---
+
+### Step 4: Launch the Interactive Terminal CLI (`cron-cli`)
+Launch the interactive command-line application to test cron scheduling live:
+
+```bash
+cargo run --bin cron-cli
+```
+
+#### Interactive Commands inside `cron-cli`:
+* **Parse a cron expression:**
+  ```text
+  parse "0/15 * * * * *"
+  ```
+* **Add a job to run every 5 seconds:**
+  ```text
+  add "0/5 * * * * *" "Execute database backup"
+  ```
+* **List all active jobs & next run timestamps:**
+  ```text
+  list
+  ```
+* **Remove a job by ID:**
+  ```text
+  remove 1
+  ```
+* **Exit the CLI:**
+  ```text
+  exit
+  ```
+
+---
+
+### Step 5: Run Criterion Performance Benchmarks
+To measure p99 execution latency on your system:
+
+```bash
+cargo bench
+```
 
 ---
 
@@ -90,65 +152,6 @@
 * `@daily` / `@midnight` — Run once a day (`0 0 0 * * *`)
 * `@hourly` — Run once an hour (`0 0 * * * *`)
 * `@every <duration>` — Run at fixed intervals (e.g. `@every 5s`, `@every 1m30s`, `@every 2h`)
-
----
-
-## 🛠️ Getting Started & Terminal Commands
-
-### Prerequisites
-* Rust toolchain (cargo, rustc) version 1.70+
-
-### 1. Navigate to Crate Root
-```bash
-cd cron-rs
-```
-
-### 2. Build the Library & Binary
-```bash
-cargo build
-```
-
-### 3. Run All Tests
-```bash
-cargo test
-```
-
-### 4. Run Differential Test Suite (parity with Go)
-```bash
-cargo test --test differential
-```
-
-### 5. Run Concurrency & Panic Soak Test
-```bash
-cargo test --test soak
-```
-
-### 6. Run Criterion Benchmarks
-```bash
-cargo bench
-```
-
----
-
-## 🖥️ Interactive Terminal CLI (`cron-cli`)
-
-`cron-rs` comes with an interactive shell binary for testing and managing jobs live.
-
-### Launch the CLI
-```bash
-cargo run --bin cron-cli
-```
-
-### Available Interactive Commands
-
-| Command | Example | Description |
-| :--- | :--- | :--- |
-| `add` | `add "0 30 15 2 8 *" "Run task"` | Schedule a new job with a cron expression & message. |
-| `parse` | `parse "0/15 * * * * *"` | Test-parse a spec and inspect next run timestamp. |
-| `list` | `list` | View all active jobs, Job IDs, and next scheduled run times. |
-| `remove` | `remove 1` | Remove an active job by its Job ID. |
-| `help` | `help` | Show command menu. |
-| `exit` | `exit` | Stop background scheduler and exit interactive terminal. |
 
 ---
 
